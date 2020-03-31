@@ -1,0 +1,32 @@
+! Configuration File for keepalived
+
+global_defs {
+   router_id ocp_veep
+   script_user root
+   enable_script_security
+}
+
+vrrp_script haproxy_check {
+   script "/bin/killall -0 haproxy"
+   interval 2
+   weight 2
+}
+
+vrrp_instance OCP_EXT {
+   interface ens8
+   virtual_router_id 51
+   priority 111
+   state MASTER
+   virtual_ipaddress {
+   192.168.122.122/24 dev ens8
+   192.168.122.120/24 dev ens8
+   192.168.122.110/24 dev ens8
+   }
+   track_script {
+   haproxy_check
+   }
+   authentication {
+   auth_type PASS
+   auth_pass 8d41070e-75fe-441e-aebf-15519738013b 
+   }
+}
