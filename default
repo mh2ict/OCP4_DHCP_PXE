@@ -1,0 +1,46 @@
+###
+default menu.c32   
+ prompt 0   
+ timeout 900
+ ONTIMEOUT   
+#
+ menu title ######## PXE Boot Menu ########  
+## nomodeset
+# https://access.redhat.com/solutions/4713651 inst.ks.sendmac
+# https://bugzilla.redhat.com/show_bug.cgi?id=1758091
+ label 1  
+ menu label ^1) Install Bootstrap Node
+  kernel http://192.168.122.254/install/installer-kernel-4.3 ip=dhcp rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs-4.3.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.3.8-x86_64-metal.x86_64.raw.gz  coreos.inst.ignition_url=http://192.168.122.254/ignition/bootstrap.ign 
+  initrd http://192.168.122.254/install/initramfs-4.3.img
+#rd.driver.pre=ahci 
+#rd.debug rd.shell inst.ks.sendmac
+ label 2  
+ menu label ^2) Install Master Node
+  kernel http://192.168.122.254/install/installer-kernel-4.3 ip=dhcp rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs-4.3.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.3.8-x86_64-metal.x86_64.raw.gz  coreos.inst.ignition_url=http://192.168.122.254/ignition/master.ign 
+  initrd http://192.168.122.254/install/initramfs-4.3.img
+#
+ label 3  
+  menu label ^3) Install Worker Node
+  kernel http://192.168.122.254/install/installer-kernel-4.3 ip=dhcp rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs-4.3.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.3.8-x86_64-metal.x86_64.raw.gz coreos.inst.ignition_url=http://192.168.122.254/ignition/worker.ign 
+  initrd http://192.168.122.254/install/initramfs-4.3.img
+
+ label 4
+  menu label ^4) Install Worker Node + bonding
+  kernel http://192.168.122.254/install/installer-kernel-4.3 bond=bond0:ens3,ens7:mode=802.3ad,lacp_rate=fast,miimon=100,xmit_hash_policy=layer2+3 ip=192.168.122.114::192.168.122.1:255.255.255.0:worker1.ocp4.lab.munshibari.biz:bond0:none nameserver=192.168.122.254 bootdev=bond0 ipv6.disable=1 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs-4.3.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.3.8-x86_64-metal.x86_64.raw.gz coreos.inst.ignition_url=http://192.168.122.254/ignition/worker.ign networkstatic=yes
+  #kernel http://192.168.122.254/install/installer-kernel bond=bond0.100:ens3,ens7:mode=802.3ad,miimon=100 ip=bond0.100:dhcp vlan=bond0.100:bond0  nameserver=192.168.122.254 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.2.0-x86_64-metal-bios.raw.gz networkstatic=yes
+#  kernel http://192.168.122.254/install/installer-kernel bond=bond0.100:ens3,ens7:mode=802.3ad,miimon=100 ip=192.168.122.114::192.168.122.1:255.255.255.0:worker1.ocp4.lab.munshibari.biz:bond0.100:none vlan=bond0.100:bond0  nameserver=192.168.122.254 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda initrd=http://192.168.122.254/install/initramfs.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.2.0-x86_64-metal-bios.raw.gz networkstatic=yes
+  initrd http://192.168.122.254/install/initramfs-4.3.img
+#
+ label 5
+  menu label ^5) Install Worker Node + bonding +vlantag
+  kernel http://192.168.122.254/install/installer-kernel-4.3 bond=bond0.150:ens3,ens7:mode=802.3ad,lacp_rate=fast,miimon=100,xmit_hash_policy=layer2+3 ip=192.168.122.116::192.168.122.1:255.255.255.0:worker2.ocp4.lab.munshibari.biz:bond0.150:none nameserver=192.168.122.254 vlan=bond0.150:bond0  ipv6.disable=1 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs-4.3.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.3.8-x86_64-metal.x86_64.raw.gz coreos.inst.ignition_url=http://192.168.122.254/ignition/worker.ign networkstatic=yes
+  #kernel http://192.168.122.254/install/installer-kernel bond=bond0.100:ens3,ens7:mode=802.3ad,miimon=100 ip=bond0.100:dhcp vlan=bond0.100:bond0  nameserver=192.168.122.254 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.2.0-x86_64-metal-bios.raw.gz networkstatic=yes
+#  kernel http://192.168.122.254/install/installer-kernel bond=bond0.100:ens3,ens7:mode=802.3ad,miimon=100 ip=192.168.122.114::192.168.122.1:255.255.255.0:worker1.ocp4.lab.munshibari.biz:bond0.100:none vlan=bond0.100:bond0  nameserver=192.168.122.254 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda initrd=http://192.168.122.254/install/initramfs.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.2.0-x86_64-metal-bios.raw.gz networkstatic=yes
+  initrd http://192.168.122.254/install/initramfs-4.3.img
+#
+ label 6
+  menu label ^6) Install Worker Node + 2 bonding +vlantag
+  kernel http://192.168.122.254/install/installer-kernel-4.3 bond=bond0.150:ens3,ens7:mode=802.3ad,lacp_rate=fast,miimon=100,xmit_hash_policy=layer2+3 ip=192.168.122.116::192.168.122.1:255.255.255.0:worker2.ocp4.lab.munshibari.biz:bond0.150:none nameserver=192.168.122.254 vlan=bond0.150:bond0 bond=bond1:ens11,ens12:mode=802.3ad,lacp_rate=fast,miimon=100,xmit_hash_policy=layer2+3 ip=192.168.12.116:::255.255.255.0::bond1:none  bootdev=bond0.150 ipv6.disable=1 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs-4.3.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.3.8-x86_64-metal.x86_64.raw.gz coreos.inst.ignition_url=http://192.168.122.254/ignition/worker.ign networkstatic=yes
+  #kernel http://192.168.122.254/install/installer-kernel bond=bond0.100:ens3,ens7:mode=802.3ad,miimon=100 ip=bond0.100:dhcp vlan=bond0.100:bond0  nameserver=192.168.122.254 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda console=tty0 initrd=http://192.168.122.254/install/initramfs.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.2.0-x86_64-metal-bios.raw.gz networkstatic=yes
+#  kernel http://192.168.122.254/install/installer-kernel bond=bond0.100:ens3,ens7:mode=802.3ad,miimon=100 ip=192.168.122.114::192.168.122.1:255.255.255.0:worker1.ocp4.lab.munshibari.biz:bond0.100:none vlan=bond0.100:bond0  nameserver=192.168.122.254 rd.neednet=1 coreos.inst=yes coreos.inst.install_dev=vda initrd=http://192.168.122.254/install/initramfs.img coreos.inst.image_url=http://192.168.122.254:80/install/rhcos-4.2.0-x86_64-metal-bios.raw.gz networkstatic=yes
+  initrd http://192.168.122.254/install/initramfs-4.3.img
